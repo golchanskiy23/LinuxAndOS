@@ -19,6 +19,7 @@ touch user.job
 # has a correct structure: *@*.*
 echo "find . -type f -name file\?.txt -exec grep -E '(^|[ (:])([a-zA-Z][a-zA-Z0-9]*([.-][a-zA-Z0-9]+)*@ \\
 [0-9a-zA-Z]+(-?[0-9a-zA-Z])*(\.[a-z]{2,}(-[a-z0-9]{1,})?))(?=$|[ ):.])' {} + | \\
+grep -o '[a-zA-Z0-9.-]+@[0-9a-zA-Z]+\.[a-z]{2,}([-a-z0-9]{1,})?' | \\
 sed -E 's/^[^a-zA-Z]//; s/[^a-zA-Z0-9]$//' | \\
 tr 'A-Z' 'a-z' > allemails.lst" > user.job
 
