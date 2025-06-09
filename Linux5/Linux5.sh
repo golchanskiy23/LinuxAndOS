@@ -1,12 +1,12 @@
 #! /bin/bash
 
 function divide () {
-	if [[ $2 =~ ^0+.?0+ ]]; then
+	if [[ $2 =~ ^0+(\.0+)?$ ]]; then
 	echo "Division by 0: $(date)">&2 >> errorlog.txt
 	exit 1
 	fi
 
-	echo "scale=6; $1 / $2" | bc
+	echo "scale=6; $1 / $2" | bc -l
 }
 
 # берём 2 операнда и оператор через shift и суммируем
@@ -17,10 +17,10 @@ function calculate () {
 		echo "scale=6; $1 + $2" | bc
 		;;
 		"-")
-		echo $(($1-$2))
+		echo "scale=6; $1 - $2" | bc
 		;;
 		"x" | "X")
-		echo $(($1*$2))
+		echo "scale=6; $1 * $2" | bc
 		;;
 		"/")
 		echo $(divide $1 $2)
@@ -44,15 +44,11 @@ fi
 # если чётная - число, нечётное - операция(c 0-ой итерации)
 res=0
 while [ $# -gt 0 ]; do
-oper1=$1
-shift 1
-operator=$1
-shift 1
-oper2=$1
-shift 1
+oper1=$1; shift 1
+operator=$1; shift 1
+oper2=$1; shift 1
 
-if ! [[ $oper1 =~ ^-?[0-9][.[0-9]+|[0-9]*]$ \
-&& $oper2 =~ ^-?[0-9][.[0-9]+|[0-9]*]$ ]]; then
+if ! [[ $oper1 =~ ^-?[0-9]+(\.[0-9]+)?$ && $oper2 =~  ^-?[0-9]+(\.[0-9]+)?$ ]]; then
 echo "Operands must be digits: $(date)">&2 >> errorlog.txt
 exit 1
 fi
@@ -63,7 +59,7 @@ exit 1
 fi
 
 tmp=$(calculate $oper1 $oper2 $operator)
-res="scale=6; $res + $tmp" | bc
+res=$(echo "scale=6; $res + $tmp" | bc)
 done
 
 # выводим ответ
