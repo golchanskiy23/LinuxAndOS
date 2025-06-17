@@ -6,15 +6,17 @@ if [[ $((number % 2)) -eq 0 ]]; then
 	exit 1
 fi
 
-half=$((($number+1)/2))
+number=$((2*($number-1)+1))
+
+half=$((($number)/2))
 
 for ((i=0; i<=half; i++ )); do
 	spaces=$(($half-$i))
 	printf "%*s" "$spaces" ""
 
-	for ((j=$spaces; j <= 2*($number-1)-$spaces; j+=2)); do
+	for ((j=$spaces; j <= $number-$spaces; j+=2)); do
 		printf "*"
-		if (( j >= 2*($number-1)-$spaces )); then
+		if (( j >= $number-$spaces )); then
 			break
 		else
 			printf " "
@@ -24,13 +26,13 @@ for ((i=0; i<=half; i++ )); do
 	echo
 done
 
-for ((i=0; i<=half-1; i++ )); do
-        spaces=$(($i+1))
+for (( i=half-1; i>=0 ; i-- )); do
+        spaces=$(($half-$i))
         printf "%*s" "$spaces" ""
 
-        for ((j=$spaces; j <= 2*($number-1)-$spaces; j+=2)); do
+        for ((j=$spaces; j <= $number-$spaces; j+=2)); do
                 printf "*"
-                if (( j >= 2*($number-1)-$spaces )); then
+                if (( j >= $number-$spaces )); then
                         break
                 else
                         printf " "
